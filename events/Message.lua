@@ -29,9 +29,9 @@ return function (data)
     --自动判断群聊与私聊
     local function sendMessage(s)
         if LuaEnvName ~= "private" then
-            CQApi:SendGroupMessage(data.group,s)
+            return CQApi:SendGroupMessage(data.group,s)
         else
-            CQApi:SendPrivateMessage(data.qq,s)
+            return CQApi:SendPrivateMessage(data.qq,s)
         end
     end
 
@@ -58,8 +58,7 @@ return function (data)
             end
         end
         sendMessage("[CQ:emoji,id=128172]命令帮助("..tostring(page).."/"..tostring(maxPage).."页)\r\n"..
-        table.concat(allApp, "\r\n").."\r\n"..
-        "[CQ:emoji,id=128483]开源代码：\r\nhttps://www.chenxublog.com/qqrobot")
+        table.concat(allApp, "\r\n").."\r\n")
         return
     end
 

@@ -1,6 +1,6 @@
 return {--通用回复
-check = function ()
-    return true
+check = function (data)
+    return data.msg:find("/") == 1 or math.random(0,100) > 90
 end,
 run = function (data,sendMessage)
     if data.qq == 1000000 then

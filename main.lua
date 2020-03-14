@@ -102,6 +102,18 @@ function asyncHttpPost(url,para,timeout,cookie,contentType)
     return d or "",r2 and r1
 end
 
+--封装一个异步的http file上传接口
+function asyncHttpUploadFile(url,para,path,timeout,cookie)
+    local delayFlag = "http_post_"..os.time()..getId()--基本没有重复可能性的唯一标志
+    sys.async("com.papapoi.ReceiverMeow","Native.Csharp.App.LuaEnv.Utils.HttpUploadFile",
+            {url,para,path,timeout or 10000,cookie or ""},
+    function (r,d)
+        sys.publish(delayFlag,r,d)
+    end)
+    local r1,r2,d = sys.waitUntil(delayFlag, timeout)
+    return d or "",r2 and r1
+end
+
 --封装一个异步的文件下载接口
 function asyncFileDownload(url, path, maxSize, timeout)
     local delayFlag = "http_file_"..os.time()..getId()--基本没有重复可能性的唯一标志
@@ -113,8 +125,16 @@ function asyncFileDownload(url, path, maxSize, timeout)
     return sys.waitUntil(delayFlag, timeout)
 end
 
+imageCheck = require("imageCheck")
+
 --根据url显示图片
-function asyncImage(url)
+function asyncImage(url,check)
+    if check then
+        local adultData = imageCheck.remoteCheck(url)
+        if adultData.isAdult > 1 then
+            return "检测到疑似H图 已隐藏"
+        end
+    end
     local file = "0LuaTemp"..os.time()..getId()..".luatemp"
     local sr,fr,dr = asyncFileDownload(url,"data/image/"..file,1024 * 1024 * 20,5000)
     if sr and fr and dr then
@@ -146,13 +166,13 @@ local events = {
     --GroupAddRequest = "",--加群请求
     GroupAddInvite = "GroupAddInvite",--机器人被邀请进群
     --GroupBanSpeak = "",--群禁言
-    --GroupUnBanSpeak = "",--群解除禁言
+    GroupUnBanSpeak = "GroupUnBanSpeak",--群解除禁言
     GroupManageSet = "GroupManageSet",--设置管理
     GroupManageRemove = "GroupManageRemove",--取消管理
-    GroupMemberExit = "GroupMemberLeave",--群成员减少，主动退--┐---→统一处理
-    GroupMemberRemove = "GroupMemberLeave",--群成员减少，被踢--┘
-    GroupMemberInvite = "GroupMemberJoin",--群成员增加，被邀请--┐---→统一处理
-    GroupMemberPass = "GroupMemberJoin",--群成员增加，申请的----┘
+    -- GroupMemberExit = "GroupMemberLeave",--群成员减少，主动退--┐---→统一处理
+    -- GroupMemberRemove = "GroupMemberLeave",--群成员减少，被踢--┘
+    -- GroupMemberInvite = "GroupMemberJoin",--群成员增加，被邀请--┐---→统一处理
+    -- GroupMemberPass = "GroupMemberJoin",--群成员增加，申请的----┘
     GroupMessage = "Message",--群消息-------┐---→统一处理
     PrivateMessage = "Message",--私聊消息---┘
     GroupFileUpload = "GroupFileUpload",--有人上传文件
