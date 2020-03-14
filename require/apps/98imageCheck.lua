@@ -4,10 +4,6 @@ local function switch(data,sendMessage)
         sendMessage("无操作权限")
         return
     end
-    if not data.group then
-        sendMessage("请在群内使用")
-        return
-    end
     local r18CheckSwitch = XmlApi.Get("r18CheckGroup",tostring(data.group))
     local robotInfo = Utils.GetGroupMemberInfo(data.group,CQApi:GetLoginQQId())
 
@@ -34,8 +30,9 @@ local function isOn(group)
 end
 return {--涩图检查
 check = function (data)
-    return (data.msg:find("%[CQ:image,file=") and isOn(data.group)) or
-            data.msg == "涩图检测"
+    return (data.group and
+           (data.msg:find("%[CQ:image,file=") and isOn(data.group)) or
+            data.msg == "涩图检测")
 end,
 run = function (data,sendMessage)
     if data.msg == "涩图检测"  then--开关

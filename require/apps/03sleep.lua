@@ -7,7 +7,7 @@ return {--精致睡眠
 check = function (data)
     return ((data.msg == "supersleep" or data.msg == "sleep" or data.msg == "nap") or
     (data.msg:find("%[CQ:at,qq="..CQApi:GetLoginQQId().."%]") and
-    (data.msg:find("%d+天.-套餐") or data.msg:find("%d+小?时.-套餐")))) and data.group
+    (data.msg:find("%d+天.-套餐") or data.msg:find("%d+小?时.-套餐"))))
 end,
 run = function (data,sendMessage)
     if not data.group then
