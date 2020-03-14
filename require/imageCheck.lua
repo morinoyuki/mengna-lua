@@ -162,7 +162,7 @@ function imageCheck.remoteCheck(url)
     return submitRemoteImage(url)
 end
 function imageCheck.submitVault(message)
-    local r
+    local r = ""
     for imageCode in message:gmatch("(%[CQ:image,file=.-%])") do
         local pic = Utils.GetPictureInfo(imageCode)
         if pic.url then
