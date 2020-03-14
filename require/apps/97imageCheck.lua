@@ -4,6 +4,10 @@ local function switch(data,sendMessage)
         sendMessage("无操作权限")
         return
     end
+    if not data.group then
+        sendMessage("请在群内使用")
+        return
+    end
     local r18CheckSwitch = XmlApi.Get("r18CheckGroup",tostring(data.group))
     local robotInfo = Utils.GetGroupMemberInfo(data.group,CQApi:GetLoginQQId())
 

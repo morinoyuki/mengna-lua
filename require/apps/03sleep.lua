@@ -10,6 +10,10 @@ check = function (data)
     (data.msg:find("%d+天.-套餐") or data.msg:find("%d+小?时.-套餐")))) and data.group
 end,
 run = function (data,sendMessage)
+    if not data.group then
+        sendMessage("私聊你睡尼玛呢")
+        return
+    end
     local robotInfo = Utils.GetGroupMemberInfo(data.group,CQApi:GetLoginQQId())
     local memberInfo = Utils.GetGroupMemberInfo(data.group,data.qq)
     if robotInfo and robotInfo.MemberType:ToString () == "Member" then
