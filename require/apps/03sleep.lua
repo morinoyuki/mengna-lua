@@ -5,9 +5,9 @@ local function cqSetGroupBanSpeak(g,q,t)
 end
 return {--精致睡眠
 check = function (data)
-    return ((data.msg == "supersleep" or data.msg == "sleep" or data.msg == "nap") or
+    return (data.msg == "supersleep" or data.msg == "sleep" or data.msg == "nap") or
     (data.msg:find("%[CQ:at,qq="..CQApi:GetLoginQQId().."%]") and
-    (data.msg:find("%d+天.-套餐") or data.msg:find("%d+小?时.-套餐"))))
+    (data.msg:find("%d+天") or data.msg:find("%d+小?时")) and (data.msg:find("套餐") or (data.msg:find("禁言"))))
 end,
 run = function (data,sendMessage)
     if not data.group then
@@ -44,6 +44,9 @@ run = function (data,sendMessage)
         else
             return false
         end
+        cqSetGroupBanSpeak(data.group,data.qq,banTime)
+        sendMessage(Utils.CQCode_At(data.qq).."您要的套餐已送达 请慢用")
+        return true
     end
     cqSetGroupBanSpeak(data.group,data.qq,banTime)
     sendMessage(Utils.CQCode_At(data.qq).."精致深度睡眠套餐已送达 口球戴好杂修")

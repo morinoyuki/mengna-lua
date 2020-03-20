@@ -57,8 +57,10 @@ end
 local function getImageInfo(path)
     --色合検索
     local root = getHtml("https://ascii2d.net/search/file",path,"post")
+    local bovwData
+    local errorInfo = "未知错误"
     if not root then
-        return "BOOM-图片上传失败"
+        return "图片上传失败"
     end
     local hash = getHash(root)
     local colorData = getItemInfo(root)
@@ -66,16 +68,21 @@ local function getImageInfo(path)
         return "BOOM"
     end
     --特徴検索
-    root = getHtml("https://ascii2d.net/search/bovw/"..hash)
-    if not root then
-        return "BOOM-获取特徴検索数据未成功"
-    end
-    local bovwData = getItemInfo(root)
-    if not bovwData then
-        return "BOOM"
+    if hash and hash ~= "" then
+        root = getHtml("https://ascii2d.net/search/bovw/"..hash)
+        if root then
+            bovwData = getItemInfo(root)
+            if not bovwData then
+                errorInfo = "获取图片信息失败"
+            end
+        else
+            errorInfo = "获取数据未成功"
+        end
+    else
+        errorInfo = "HASH获取失败"
     end
     return "色合検索:\r\n"..colorData..
-        "特徴検索:\r\n"..bovwData.."Engine by Ascii2d\r\nScript by 喵萌茶会组长:老森"
+        "特徴検索:\r\n"..(bovwData or errorInfo.."\r\n").."Engine by Ascii2d\r\nScript by 喵萌茶会组长:老森"
 end
 
 local function ascii2d(message,sendMessage)
@@ -83,9 +90,7 @@ local function ascii2d(message,sendMessage)
     if path and path:len() ~= 0 then
         sendMessage("少女祈祷中....")
         path = Utils.GetAsciiHex(path):fromHex()
-        local r = getImageInfo(path)
-        -- cqRepealMessage(id)
-        return r
+        return getImageInfo(path)
     else
         return "未在消息中过滤出图片"
     end

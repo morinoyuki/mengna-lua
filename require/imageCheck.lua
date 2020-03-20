@@ -7,19 +7,6 @@ local function cqSetGroupBanSpeak(g,q,t)
     local time = TimeSpan(0,0,t)
     CQApi:SetGroupMemberBanSpeak(g,q,time)
 end
---格式化秒数
-local function secDateFormat(sec)
-    local date = {
-        d = math.floor(sec / 60 / 60 / 24),
-        h = math.floor(sec / 60 / 60 % 24),
-        m = math.floor(sec / 60 % 60),
-        s = sec % 60,
-    }
-    return (date.d ~= 0 and tostring(date.d).."天" or "")..
-    (date.h ~= 0 and tostring(date.h).."小时" or "")..
-    (date.m ~= 0 and tostring(date.m).."分钟" or "")..
-    (date.s ~= 0 and tostring(date.s).."秒" or "")
-end
 --缓存初始化
 -- local function cacheInitialize()
 --     local tmp = apiGetVar("md5Cache")
@@ -156,6 +143,10 @@ end
 function imageCheck.check(message)
     local imagePath = Utils.GetImagePath(message)
     return submitLocalImage(imagePath)
+end
+--本地图片检查
+function imageCheck.localCheck(path)
+    return submitLocalImage(path)
 end
 --远程图片检查
 function imageCheck.remoteCheck(url)

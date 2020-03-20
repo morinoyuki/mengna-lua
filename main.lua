@@ -129,15 +129,22 @@ imageCheck = require("imageCheck")
 
 --根据url显示图片
 function asyncImage(url,check)
+    local adultData
     if check then
-        local adultData = imageCheck.remoteCheck(url)
-        if adultData.isAdult > 1 then
+        adultData = imageCheck.remoteCheck(url)
+        if adultData.isAdult >= 1 then
             return "检测到疑似H图 已隐藏"
         end
     end
     local file = "0LuaTemp"..os.time()..getId()..".luatemp"
     local sr,fr,dr = asyncFileDownload(url,"data/image/"..file,1024 * 1024 * 20,5000)
     if sr and fr and dr then
+        if adultData and adultData.isAdult < 0 then
+            adultData  = imageCheck.localCheck("data/image/"..file)
+            if adultData.isAdult >= 1 then
+                return "检测到疑似H图 已隐藏"
+            end
+        end
         return "[CQ:image,file="..file.."]"
     else
         return ""
@@ -178,6 +185,38 @@ local events = {
     GroupFileUpload = "GroupFileUpload",--有人上传文件
     TcpServer = "ReceiveTcp",--收到tcp客户端发来的数据
 }
+
+--格式化秒
+function secDateFormat(sec)
+    local date = {
+        d = math.floor(sec / 60 / 60 / 24),
+        h = math.floor(sec / 60 / 60 % 24),
+        m = math.floor(sec / 60 % 60),
+        s = sec % 60,
+    }
+    return (date.d ~= 0 and tostring(date.d).."天" or "")..
+    (date.h ~= 0 and tostring(date.h).."小时" or "")..
+    (date.m ~= 0 and tostring(date.m).."分钟" or "")..
+    (date.s ~= 0 and tostring(date.s).."秒" or "")
+end
+
+--设置cd
+function setCoolDownTime(data,v,time)
+    -- sendMessage((group and cqCode_At(qq) or "").."cd时间已设置为"..time.."S")
+    XmlApi.Set(v,tostring(data.qq),tostring(os.time()+time))
+end
+
+--检查cd
+function checkCoolDownTime(data,v)
+    if not data.group then return true end
+    local cdTime = XmlApi.Get(v,tostring(data.qq))
+    cdTime = cdTime == "" and 0 or tonumber(cdTime) or 0
+    local cdOver = cdTime == 0 or (cdTime < os.time() and cdTime ~= 0)
+    if not cdOver then
+        CQApi:SendGroupMessage(data.group,(data.group and Utils.CQCode_At(data.qq) or "").."冷却中 还有"..secDateFormat(cdTime - os.time()))
+    end
+    return cdOver
+end
 
 for i,j in pairs(events) do
     local f

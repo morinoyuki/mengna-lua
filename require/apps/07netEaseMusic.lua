@@ -1,12 +1,12 @@
 --网易云
 
-local function netEase(message)
+local function netEaseMusic(message)
     local songID
     local key
     if message:find("music%.163%.com/song%?id=%d+") then
         songID = message:match("song%?id=(%d+)")
     else
-        key = message:gsub("网易点歌 *","")
+        key = message:gsub("网易点歌 *",""):gsub("网易云点歌 *","")
         if key == "" then return "请正确输入关键词" end
         songID = tonumber(key)
     end
@@ -32,11 +32,11 @@ end
 
 return {--网易点歌
 check = function (data)
-    return data.msg:find("网易点歌") == 1 or data.msg:find("music%.163%.com/song%?id=%d+")
+    return data.msg:find("网易点歌") == 1 or data.msg:find("网易云?点歌") == 1 or data.msg:find("music%.163%.com/song%?id=%d+")
 end,
 run = function (data,sendMessage)
     sys.taskInit(function ()
-        sendMessage(netEase(data.msg))
+        sendMessage(netEaseMusic(data.msg))
     end)
     return true
 end,

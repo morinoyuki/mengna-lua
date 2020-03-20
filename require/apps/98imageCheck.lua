@@ -8,12 +8,13 @@ local function switch(data,sendMessage)
     local robotInfo = Utils.GetGroupMemberInfo(data.group,CQApi:GetLoginQQId())
 
     if r18CheckSwitch == "on" then
-        local nick = robotInfo.Nick:gsub("「巡视中」","")
+        local nick = robotInfo.Card ~= "" and robotInfo.Card:gsub("「巡视中」","") or ""
         r18CheckSwitch = "off"
         onGroupList[tostring(data.group)] = false
         CQApi:SetGroupMemberVisitingCard(data.group,CQApi:GetLoginQQId(),nick)
     else
-        local nick = robotInfo.Nick:gsub("「巡视中」","").."「巡视中」"
+        local nick = robotInfo.Card ~= "" and
+        robotInfo.Card:gsub("「巡视中」","").."「巡视中」" or robotInfo.Nick:gsub("「巡视中」","").."「巡视中」"
         r18CheckSwitch = "on"
         onGroupList[tostring(data.group)] = true
         CQApi:SetGroupMemberVisitingCard(data.group,CQApi:GetLoginQQId(),nick)

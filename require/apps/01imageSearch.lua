@@ -16,13 +16,11 @@ local function getImageInfo(pic)
     if not r or not t then return "查找失败" end
     if not t.results or #t.results==0 then return "未找到结果" end
     local result = ""
-    local tmp = ""
     local last = {}
-    local flag = false
     local n = 0
     for i=1,#t.results do
-        tmp = ""
-        flag = false
+        local tmp = ""
+        local flag = false
         if t.results[i].header.index_id == 5 and tonumber(t.results[i].header.similarity) > t.header.minimum_similarity then
             tmp = (t.results[i].header.thumbnail and asyncImage(t.results[i].header.thumbnail,true) or "").."\r\n"..
             (t.results[i].data.title and t.results[i].data.title or "").."\r\n"..
