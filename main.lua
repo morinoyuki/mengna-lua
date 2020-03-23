@@ -208,7 +208,7 @@ end
 
 --检查cd
 function checkCoolDownTime(data,v)
-    if not data.group then return true end
+    if LuaEnvName == "private" then return true end
     local cdTime = XmlApi.Get(v,tostring(data.qq))
     cdTime = cdTime == "" and 0 or tonumber(cdTime) or 0
     local cdOver = cdTime == 0 or (cdTime < os.time() and cdTime ~= 0)

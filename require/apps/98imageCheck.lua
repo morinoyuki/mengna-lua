@@ -31,7 +31,7 @@ local function isOn(group)
 end
 return {--涩图检查
 check = function (data)
-    return (data.group and
+    return (LuaEnvName ~= "private" and
            (data.msg:find("%[CQ:image,file=") and isOn(data.group)) or
             data.msg == "涩图检测")
 end,

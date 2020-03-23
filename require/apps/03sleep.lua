@@ -10,7 +10,7 @@ check = function (data)
     (data.msg:find("%d+天") or data.msg:find("%d+小?时")) and (data.msg:find("套餐") or (data.msg:find("禁言"))))
 end,
 run = function (data,sendMessage)
-    if not data.group then
+    if LuaEnvName == "private" then
         sendMessage("私聊你睡尼玛呢")
         return
     end
