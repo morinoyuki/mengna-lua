@@ -1,4 +1,45 @@
 return {
+    ["阿姨压一压"] = {
+        {
+            type = "message",
+            msg = "[CQ:music,type=163,id=26319684]",
+            wait = 60*130
+        },
+        {
+            type = "message",
+            msg = "ゴゴゴゴゴゴゴゴゴゴゴゴゴゴ",
+            wait = 60*100
+        },
+        {
+            type = "image",
+            file = "jojo\\neko.gif",
+            wait = 60*100
+        },
+        {
+            type = "message",
+            msg = "ゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴ",
+            wait = 60*100
+        },
+        {
+            type = "message",
+            msg = "ゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴ",
+            wait = 60*100
+        },{
+            type = "message",
+            msg = "ゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴ",
+            wait = 60*100
+        },
+        {
+            type = "image",
+            file = "jojo\\月下三兄贵.jpg",
+            wait = 60*100
+        },
+        {
+            type = "message",
+            msg = "ゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴゴ",
+            wait = 60*100
+        },
+    },
     ["泷泽萝拉哒"] = {
         {
             type = "record",
