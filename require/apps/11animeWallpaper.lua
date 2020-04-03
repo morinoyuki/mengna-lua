@@ -1,13 +1,15 @@
 return {--随机动漫壁纸
 check = function (data)
-    return data.msg:find("动漫壁纸") == 1
+    return data.msg:find("动漫壁纸 *%d*$") == 1
 end,
 run = function (data,sendMessage)
     local apiUrlList = {
-        -- "https://api.w0ai1uo.org/api/dongman/",
-        -- "https://s0.xinger.ink/acgimg/acgurl.php",
         "https://api.ixiaowai.cn/api/api.php",
         "http://api.btstu.cn/sjbz/?lx=dongman",
+        "https://acg.yanwz.cn/wallpaper/api.php",
+        "http://api.mtyqx.cn/api/random.php",
+        "http://www.dmoe.cc/random.php",
+        "https://api.713.moe/acgpic"
     }
     local index = tonumber(data.msg:match("(%d+)")) or math.random(1,#apiUrlList)
     if index > #apiUrlList then

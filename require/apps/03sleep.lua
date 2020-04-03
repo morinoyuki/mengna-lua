@@ -1,8 +1,5 @@
 import('System')
-local function cqSetGroupBanSpeak(g,q,t)
-    local time = TimeSpan(0,0,t)
-    CQApi:SetGroupMemberBanSpeak(g,q,time)
-end
+
 return {--精致睡眠
 check = function (data)
     return (data.msg == "supersleep" or data.msg == "sleep" or data.msg == "nap") or
@@ -23,32 +20,31 @@ run = function (data,sendMessage)
         sendMessage("无法禁言管理员")
         return true
     end
-    local banTime = 0
+    local time 
     if data.msg == "supersleep" then
-        banTime = 24*60*60-60
+         time = TimeSpan(1,0,0,0)
     elseif data.msg == "sleep" then
-        banTime  = 8*60*60
+         time = TimeSpan(8,0,0)
     elseif data.msg == "nap" then
-        banTime = 30*60
+        time = TimeSpan(0,30,0)
     else
         local day = data.msg:match("(%d+)天")
-        day = tonumber(day)
+        day = tonumber(day) or 0
         local hour = data.msg:match("(%d+)小?时")
-        hour = tonumber(hour)
-        if day and day > 0 then
-            day = day > 30 and 30 or day
-            banTime = day*24*60*60
-        elseif hour and hour > 0 then
-            hour = hour > 720 and 720 or hour
-            banTime = hour*60*60
+        hour = tonumber(hour) or 0
+        if day > 0 or hour > 0 then
+            time = TimeSpan(day,hour,0,0)
+            if time.TotalSeconds > 2592000  then
+                time = TimeSpan(30,0,0,0)
+            end
         else
             return false
         end
-        cqSetGroupBanSpeak(data.group,data.qq,banTime)
+        CQApi:SetGroupMemberBanSpeak(data.group,data.qq,time)
         sendMessage(Utils.CQCode_At(data.qq).."您要的套餐已送达 请慢用")
         return true
     end
-    cqSetGroupBanSpeak(data.group,data.qq,banTime)
+    CQApi:SetGroupMemberBanSpeak(data.group,data.qq,time)
     sendMessage(Utils.CQCode_At(data.qq).."精致深度睡眠套餐已送达 口球戴好杂修")
     return true
 end,

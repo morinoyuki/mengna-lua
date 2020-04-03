@@ -34,7 +34,22 @@ return function (data)
             return CQApi:SendPrivateMessage(data.qq,s)
         end
     end
-
+    --同意邀请
+    if data.qq == Utils.setting.AdminQQ and data.msg:find("#同意%s*%d+") == 1 then
+        local inviteeData = Utils.GetVar("groupInvitee")
+        inviteeData = inviteeData ~= "" and jsonDecode(inviteeData) or {}
+        local k = tonumber(data.msg:match("(%d+)"))
+        if inviteeData[k] then
+            CQApi:SetGroupAddRequest(inviteeData[k],CQGroupAddRequestType.RobotBeInviteAddGroup,CQResponseType.PASS,"同意邀请操作")--同意邀请
+            table.remove(inviteeData,k)
+            local j = jsonEncode(inviteeData)
+            Utils.SetVar("groupInvitee",j)
+            sendMessage("Done")
+        else
+            sendMessage("不存在")
+        end
+        return
+    end
     --帮助列表每页最多显示数量
     local maxEachPage = 8
     --匹配是否需要获取帮助

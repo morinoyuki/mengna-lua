@@ -711,6 +711,7 @@ function getAlmanac(time,fromqq)
     local seed = fromqq..tostring(day)--今日唯一的随机数种子
     local ran = math.randomx(1,#goodthings,6,seed)
     local saysTemp = says[math.random(1,#says)]
+    local luck = math.random(0,100)
     --恢复随机数种子为随机值
     math.randomseed(tostring(os.time()):reverse():sub(1, 6))
     return("你的运势如下~\r\n"..
@@ -723,7 +724,7 @@ function getAlmanac(time,fromqq)
     "\r\n"..badthings[ran[6]]..
     "\r\n"..
     "[CQ:emoji,id=128197]日期："..os.date("%Y年%m月%d日",time).."\r\n"..
-    "[CQ:emoji,id=127919]综合幸运指数："..tostring(math.random(0,100)).."%\r\n"..
+    "[CQ:emoji,id=127919]综合幸运指数："..tostring(luck).."%\r\n"..
     "[CQ:emoji,id=128221]当日吉言："..saysTemp)
 end
 

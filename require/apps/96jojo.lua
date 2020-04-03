@@ -1,4 +1,4 @@
-local runing
+local runing = false
 local next = 0
 local nieta = require("nieta")
 local function nietaRun(data, t, sendMessage)
@@ -26,20 +26,27 @@ local function nietaRun(data, t, sendMessage)
         if v.wait and v.wait > 0 then sys.wait(v.wait) end
     end
     runing = false
-    setCoolDownTime(data, "jojo", 24*60*60)
 end
 return {
 check = function (data)
-    return LuaEnvName ~= "private" and not runing and ((data.msg:find("[Jj][Oo][Jj][Oo]") and next and os.time() > next) or
-    (nieta[data.msg] and checkCoolDownTime(data,"jojo")))
+    return LuaEnvName ~= "private" and not runing and
+    ((data.msg:find("[Jj][Oo][Jj][Oo]") or os.time() > next) or (data.msg:utf8Len() <= 5 and nieta[data.msg]))
 end,
 run = function (data, sendMessage)
+    if os.time() < next then
+        sendMessage("一天只能一次")
+        return false
+    end
     runing = true
-    next = os.time()+3600*24
+    local time = os.date("*t",os.time()+3600*24)
+    time.hour = 0
+    time.min = 0
+    time.sec = 0
+    next = os.time(time)
     local name = data.msg
     if data.msg:find("[Jj][Oo][Jj][Oo]") then
         sendMessage("jojo？你说jojo了吧！ wryyyyyyyy")
-        name = "泷泽萝拉哒"
+        name = "砸瓦鲁多"
     end
     sys.taskInit(function ()
         nietaRun(data, nieta[name], sendMessage)
@@ -47,6 +54,6 @@ run = function (data, sendMessage)
     return true
 end,
 explain = function ()
-    return "[CQ:emoji,id=128668]泷泽萝拉哒/阿姨压一压"
+    return "[CQ:emoji,id=128668]泷泽萝拉哒/阿姨压一压/砸瓦鲁多"
 end
 }

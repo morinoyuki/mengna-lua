@@ -1,14 +1,22 @@
 return {--点赞
-check = function (data)--检查函数，拦截则返回true
+check = function (data)
     return (data.msg=="点赞" or data.msg=="赞我") and checkCoolDownTime(data, "like")
 end,
-run = function (data,sendMessage)--匹配后进行运行的函数
+run = function (data,sendMessage)
+    --CD时间
+    local time = os.date("*t",os.time()+3600*24)
+    time.hour = 0
+    time.min = 0
+    time.sec = 0
+    local cdTime = os.time(time) - os.time()
+    setCoolDownTime(data, "like", cdTime)
     math.randomseed(tostring(os.time()):reverse():sub(1, 6))
+    --拒绝
     if math.random() > 0.8 then
         sendMessage(Utils.CQCode_At(data.qq).."\r\n"..Utils.CQCode_Image("jojo\\jujue.gif"))
-        setCoolDownTime(data, "like", 12*60*60)
         return true
     end
+    --开始点赞
     CQApi:SendPraise(data.qq, 10)
     if math.random() > 0.5 then
         sendMessage(Utils.CQCode_At(data.qq).."\r\n"..Utils.CQCode_Image("jojo\\like.jpg").."\r\n吉良吉影为你点赞")
@@ -17,7 +25,7 @@ run = function (data,sendMessage)--匹配后进行运行的函数
     end
     return true
 end,
-explain = function ()--功能解释，返回为字符串，若无需显示解释，返回nil即可
+explain = function ()
     return "[CQ:emoji,id=128077]点赞"
 end
 }

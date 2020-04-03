@@ -1,6 +1,7 @@
 --导入需要的命名空间
 --酷q库
 import("com.papapoi.ReceiverMeow","Native.Csharp.App.Common")
+import("Native.Csharp.Sdk","Native.Csharp.Sdk.Cqp.Enum")
 --Utils接口
 import("com.papapoi.ReceiverMeow","Native.Csharp.App.LuaEnv")
 --HttpTool和HttpWebClient
@@ -182,8 +183,8 @@ local events = {
     -- GroupMemberPass = "GroupMemberJoin",--群成员增加，申请的----┘
     GroupMessage = "Message",--群消息-------┐---→统一处理
     PrivateMessage = "Message",--私聊消息---┘
-    GroupFileUpload = "GroupFileUpload",--有人上传文件
-    TcpServer = "ReceiveTcp",--收到tcp客户端发来的数据
+    -- GroupFileUpload = "GroupFileUpload",--有人上传文件
+    -- TcpServer = "ReceiveTcp",--收到tcp客户端发来的数据
 }
 
 --格式化秒

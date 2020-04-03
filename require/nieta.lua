@@ -1,4 +1,56 @@
 return {
+    ["砸瓦鲁多"] = {
+        {
+            type = "record",
+            file = "jojo\\jojo_1.mp3",
+            wait = 60*100
+        },
+        {
+            type = "record",
+            file = "jojo\\jojo_2.mp3",
+            wait = 60*100
+        },
+        {
+            type = "record",
+            file = "jojo\\jojo_3.mp3",
+            wait = 60*100
+        },
+        {
+            type = "record",
+            file = "jojo\\jojo_4.mp3",
+            wait = 60*100
+        },
+        {
+            type = "record",
+            file = "jojo\\jojo_5.mp3",
+            wait = 0
+        },
+        {
+            type = "image",
+            file = "jojo\\2muda.gif",
+            wait = 60*50
+        },
+        {
+            type = "image",
+            file = "jojo\\2ora.gif",
+            wait = 60*50
+        },
+        {
+            type = "image",
+            file = "jojo\\砸瓦鲁多.jpg",
+            wait = 60*50
+        },
+        {
+            type = "record",
+            file = "jojo\\jojo_6.mp3",
+            wait = 60*100
+        },
+        {
+            type = "image",
+            file = "jojo\\To Be Continued.jpg",
+            wait = 60*50
+        }
+    },
     ["阿姨压一压"] = {
         {
             type = "message",

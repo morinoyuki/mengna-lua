@@ -65,6 +65,6 @@ run = function (data,sendMessage)
     return true
 end,
 explain = function ()
-    return "[CQ:emoji,id=128444]查动画 加 没裁剪过的视频截图"
+    return "[CQ:emoji,id=128444]搜番 加 没裁剪过的视频截图"
 end
 }
