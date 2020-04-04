@@ -30,7 +30,7 @@ end
 return {
 check = function (data)
     return LuaEnvName ~= "private" and not runing and
-    ((data.msg:find("[Jj][Oo][Jj][Oo]") or os.time() > next) or (data.msg:utf8Len() <= 5 and nieta[data.msg]))
+    ((data.msg:find("[Jj][Oo][Jj][Oo]") and os.time() > next) or (data.msg:utf8Len() <= 5 and nieta[data.msg]))
 end,
 run = function (data, sendMessage)
     if os.time() < next then
