@@ -3,6 +3,9 @@ check = function (data)
     return data.msg:find("动漫图片 *%d*$") == 1 or data.msg:find("涩图 *%d*$") == 1
 end,
 run = function (data,sendMessage)
+    if not checkCoolDownTime(data, "animeImage", sendMessage) then
+        return false
+    end
     local apiUrlList = {
         "https://acg.yanwz.cn/api.php"
     }
@@ -12,6 +15,9 @@ run = function (data,sendMessage)
     else
         sys.taskInit(function ()
             local img = asyncImage(apiUrlList[index])
+            if img ~= "" then
+                setCoolDownTime(data, "animeImage", 5*60)
+            end
             sendMessage((img ~= "" and img or "读取失败，请重试").."\r\n来自"..tostring(index).."号API接口 当前接口总数:"..tostring(#apiUrlList))
         end)
     end

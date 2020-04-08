@@ -46,7 +46,7 @@ run = function (data, sendMessage)
     local name = data.msg
     if data.msg:find("[Jj][Oo][Jj][Oo]") then
         sendMessage("jojo？你说jojo了吧！ wryyyyyyyy")
-        name = "砸瓦鲁多"
+        name = "阿姨压一压"
     end
     sys.taskInit(function ()
         nietaRun(data, nieta[name], sendMessage)

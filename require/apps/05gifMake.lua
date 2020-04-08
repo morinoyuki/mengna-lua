@@ -38,7 +38,7 @@ local function getGif(message)
         url = "https://app.xuty.tk"
         apiUrl = url.."/memeet/api/v1/template/make"
         local postPara = toJson(idList[name],text)
-        local html = asyncHttpPost(apiUrl,postPara,60000,"","application/json")
+        local html = asyncHttpPost(apiUrl,postPara,70000,"","application/json")
         local d,r,_ = jsonDecode(html)
         if r and d and d.ok then
             retMsg = asyncImage(url..d.body.url)
@@ -47,7 +47,7 @@ local function getGif(message)
         url = "https://sorry.xuty.tk"
         apiUrl = url.."/"..oldList[name].."/make"
         local postPara = toOldJson(text)
-        local html = asyncHttpPost(apiUrl,postPara,60000,"","text/plain")
+        local html = asyncHttpPost(apiUrl,postPara,70000,"","text/plain")
         if html and html:find("href=\"([^\"]+)\"") then
             retMsg = asyncImage(url..html:match("href=\"([^\"]+)\""))
         end

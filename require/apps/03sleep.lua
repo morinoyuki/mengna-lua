@@ -22,9 +22,9 @@ run = function (data,sendMessage)
     end
     local time 
     if data.msg == "supersleep" then
-         time = TimeSpan(1,0,0,0)
+        time = TimeSpan(1,0,0,0)
     elseif data.msg == "sleep" then
-         time = TimeSpan(8,0,0)
+        time = TimeSpan(8,0,0)
     elseif data.msg == "nap" then
         time = TimeSpan(0,30,0)
     else

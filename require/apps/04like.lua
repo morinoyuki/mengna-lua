@@ -1,8 +1,11 @@
 return {--点赞
 check = function (data)
-    return (data.msg=="点赞" or data.msg=="赞我") and checkCoolDownTime(data, "like")
+    return (data.msg=="点赞" or data.msg=="赞我")
 end,
 run = function (data,sendMessage)
+    if not checkCoolDownTime(data, "like", sendMessage) then
+        return false
+    end
     --CD时间
     local time = os.date("*t",os.time()+3600*24)
     time.hour = 0

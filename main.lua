@@ -208,13 +208,13 @@ function setCoolDownTime(data,v,time)
 end
 
 --检查cd
-function checkCoolDownTime(data,v)
-    if LuaEnvName == "private" then return true end
+function checkCoolDownTime(data,v,sendMessage)
+    -- if LuaEnvName == "private" then return true end
     local cdTime = XmlApi.Get(v,tostring(data.qq))
     cdTime = cdTime == "" and 0 or tonumber(cdTime) or 0
     local cdOver = cdTime == 0 or (cdTime < os.time() and cdTime ~= 0)
-    if not cdOver then
-        CQApi:SendGroupMessage(data.group,(data.group and Utils.CQCode_At(data.qq) or "").."冷却中 还有"..secDateFormat(cdTime - os.time()))
+    if not cdOver and sendMessage then
+        sendMessage(Utils.CQCode_At(data.qq).."冷却中 还有"..secDateFormat(cdTime - os.time()))
     end
     return cdOver
 end
