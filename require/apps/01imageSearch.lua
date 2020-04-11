@@ -1,6 +1,6 @@
 --搜图
 --api key请用自己的
-local key = XmlApi.Get("settings","saucenao")
+local key = XmlApi.Get("settings","saucenao"):split("|")
 local searchFlag = {}
 local function getUrls(urls)
     local ret = ""
@@ -10,11 +10,11 @@ local function getUrls(urls)
     return ret
 end
 local function getImageInfo(pic)
-    local html = asyncHttpGet("https://saucenao.com/search.php?"..(key and "api_key="..key.."&" or "")..
+    local html = asyncHttpGet("https://saucenao.com/search.php?"..(#key ~= 0 and "api_key="..key[math.random(1, #key)].."&" or "")..
         "db=999&output_type=2&numres=16&url="..pic:urlEncode(),"",30000)
     local t,r,_ = jsonDecode(html)
-    if not r or not t then return "查找失败" end
-    if not t.results or #t.results==0 then return "未找到结果" end
+    if not r or not t then return false,"查找失败 可能今日搜索限额已满 明日再试或使用a2d代替" end
+    if not t.results or #t.results==0 then return false,"未找到结果 请尝试使用a2d搜索看看" end
     local result = ""
     local last = {}
     local n = 0
@@ -73,23 +73,24 @@ local function getImageInfo(pic)
             "\r\n-------------------\r\n"
             n = n+1
             if n >= 3 then
-                -- setCoolDownTime("imageSearchCoolDown",10*60)
-                return result.."已达3个结果其余将被省略"
+                break
             end
         end
     end
     if n > 0 then
-        -- setCoolDownTime("imageSearchCoolDown",10*60)
-        return result..tostring(n).."个结果"
+        return true,result..tostring(n).."个结果"
     end
-    return "未找到结果"
+    return false,"未找到结果 请尝试使用a2d搜索看看"
 end
 
-local function imageSearch(message,sendMessage)
-    local pic = Utils.GetImageUrl(message)
+local function imageSearch(data,sendMessage)
+    local pic = Utils.GetImageUrl(data.msg)
     if pic and pic ~= "" then
         local id = sendMessage("少女祈祷中....")
-        local r = getImageInfo(pic)
+        local ok,r = getImageInfo(pic)
+        if ok then
+            setCoolDownTime(data,"imageSearch",10*60)
+        end
         -- cqRepealMessage(id)
         return r
     else
@@ -103,6 +104,9 @@ check = function (data)
     (data.msg:find("%[CQ:image,file=") and searchFlag[tostring(data.qq)])
 end,
 run = function (data,sendMessage)
+    if not checkCoolDownTime(data, "imageSearch", sendMessage) then
+        return true
+    end
     if data.msg:gsub(" ","") == "搜图" then
         searchFlag[tostring(data.qq)] = true
         sendMessage(Utils.CQCode_At(data.qq).."请发送要搜索的图片")
@@ -111,7 +115,7 @@ run = function (data,sendMessage)
             searchFlag[tostring(data.qq)] = nil
         end
         sys.taskInit(function ()
-            local r = imageSearch(data.msg,sendMessage)
+            local r = imageSearch(data,sendMessage)
             sendMessage(Utils.CQCode_At(data.qq).."\r\n"..r)
         end)
     end

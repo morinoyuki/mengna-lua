@@ -4,7 +4,7 @@ check = function (data)
 end,
 run = function (data,sendMessage)
     if not checkCoolDownTime(data, "like", sendMessage) then
-        return false
+        return true
     end
     --CD时间
     local time = os.date("*t",os.time()+3600*24)

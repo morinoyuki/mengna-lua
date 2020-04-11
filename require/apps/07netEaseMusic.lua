@@ -35,8 +35,15 @@ check = function (data)
     return data.msg:find("网易点歌") == 1 or data.msg:find("网易云?点歌") == 1 or data.msg:find("music%.163%.com/song%?id=%d+")
 end,
 run = function (data,sendMessage)
+    if not checkCoolDownTime(data,"netEase",sendMessage) then
+        return true
+    end
     sys.taskInit(function ()
-        sendMessage(netEaseMusic(data.msg))
+        local r = netEaseMusic(data.msg)
+        sendMessage(r)
+        if r:find("爆炸") then
+            setCoolDownTime(data,"netEase",10*60)
+        end
     end)
     return true
 end,

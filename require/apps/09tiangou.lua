@@ -12,7 +12,7 @@ return {
     end,
     run = function (data,sendMessage)
         if not checkCoolDownTime(data, "tiangou", sendMessage) then
-            return false
+            return true
         end
         sys.taskInit(function ()
             sendMessage(tiangou())

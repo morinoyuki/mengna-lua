@@ -55,7 +55,7 @@ return function (data)
     --匹配是否需要获取帮助
     if data.msg:lower():find("help *%d*") == 1 or data.msg:find("帮助 *%d*") == 1 or data.msg:find("菜单 *%d*") == 1 then
         local page = data.msg:lower():match("help *(%d+)") or data.msg:match("帮助 *(%d+)") or
-                    data.msg:find("菜单 *(%d+)") or 1
+                    data.msg:match("菜单 *(%d+)") or 1
         page = tonumber(page)--获取页码
         local maxPage = math.ceil(#apps/maxEachPage)
         page = page > maxPage and maxPage or page
@@ -73,7 +73,8 @@ return function (data)
             end
         end
         sendMessage("[CQ:emoji,id=128172]命令帮助("..tostring(page).."/"..tostring(maxPage).."页)\r\n"..
-        table.concat(allApp, "\r\n").."\r\n")
+        table.concat(allApp, "\r\n").."\r\n"..
+        "[CQ:emoji,id=128483]如果喜欢我可以“投食”支持下\r\n拒绝白嫖从我做起")
         return
     end
 

@@ -14,10 +14,12 @@ end
 -- end
 --按照MD5将table存入缓存
 local function setCache(image,t)
+    if cache["num"] > 100 then cache = {} end
     local md5 = image:match("%[CQ:image,file=(.-)%..-%]")
-    cache[md5] = t
-    -- local j = jsonEncode(cache)
-    -- apiSetVar("md5Cache",j)
+    if not cache[md5] then
+        cache[md5] = t
+        cache["num"] = (cache["num"] or 0) + 1
+    end
 end
 local function getCache(image)
     local imageMD5 = image:match("%[CQ:image,file=(.-)%..-%]")

@@ -56,11 +56,11 @@ end
 
 local function getImageInfo(path)
     --色合検索
-    local root = getHtml("https://ascii2d.net/search/file",path,"post")
+    local root = getHtml("https://ascii2d.net/search/url/"..path)
     local bovwData
     local errorInfo = "未知错误"
     if not root then
-        return "图片上传失败"
+        return "数据获取失败"
     end
     local hash = getHash(root)
     local colorData = getItemInfo(root)
@@ -86,10 +86,10 @@ local function getImageInfo(path)
 end
 
 local function ascii2d(message,sendMessage)
-    local path = Utils.GetImagePath(message)
+    local path = Utils.GetImageUrl(message)
     if path and path:len() ~= 0 then
         sendMessage("少女祈祷中....")
-        path = Utils.GetAsciiHex(path):fromHex()
+        -- path = Utils.GetAsciiHex(path):fromHex()
         return getImageInfo(path)
     else
         return "未在消息中过滤出图片"

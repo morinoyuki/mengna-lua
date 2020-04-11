@@ -4,7 +4,7 @@ check = function (data)
 end,
 run = function (data,sendMessage)
     if not checkCoolDownTime(data, "animeImage", sendMessage) then
-        return false
+        return true
     end
     local apiUrlList = {
         "https://acg.yanwz.cn/api.php"

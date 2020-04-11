@@ -1,3 +1,5 @@
 return function (data)
-    imageCheck.falseBanCheck(data.group,data.banqq)
+    if not data.all then
+        imageCheck.falseBanCheck(data.group,data.banqq)
+    end
 end

@@ -2,15 +2,15 @@
 --api key请用自己的
 local key = XmlApi.Get("settings","trace.moe")
 local searchFlag = {}
-local function animeSearch(msg,sendMessage)
-    local pCheck = Utils.GetPictureWidth(msg) / Utils.GetPictureHeight(msg)
+local function animeSearch(data,sendMessage)
+    local pCheck = Utils.GetPictureWidth(data.msg) / Utils.GetPictureHeight(data.msg)
     if pCheck <= 1.3 or pCheck >= 2.4 then
         return "别拿表情忽悠我、请换一张完整的、没有裁剪过的动画视频截图"
     elseif pCheck ~= pCheck then --0/0 == IND
         return "未在消息中过滤出图片"
     end
 
-    local imagePath = Utils.GetImagePath(msg)--获取图片路径
+    local imagePath = Utils.GetImagePath(data.msg)--获取图片路径
 
     if not imagePath then
         return "图片读取失败"
@@ -18,7 +18,7 @@ local function animeSearch(msg,sendMessage)
     sendMessage("少女祈祷中....")
     --imagePath = Utils.GetAsciiHex(imagePath):fromHex()--转码路径，以免乱码找不到文件
 
-    local base64 = Utils.Base64File(imagePath,Utils.GetPictureHeight(msg) > 720 and 720 or 0) --获取base64结果
+    local base64 = Utils.Base64File(imagePath,Utils.GetPictureHeight(data.msg) > 720 and 720 or 0) --获取base64结果
     local html = asyncHttpPost("https://trace.moe/api/search?token="..key,
     "image=data:image/jpeg;base64,"..base64,15000)
     if not html or html:len() == 0 then
@@ -26,6 +26,7 @@ local function animeSearch(msg,sendMessage)
     end
     local d,r,i = jsonDecode(html)
     if r then
+        setCoolDownTime(data, "animeSearch", 10*60)
         return "搜索结果：\r\n"..
         "动画名："..d.docs[1].title_native.."("..d.docs[1].title_romaji..")\r\n"..
         (d.docs[1].title_chinese and "译名："..d.docs[1].title_chinese.."\r\n" or "")..
@@ -51,6 +52,9 @@ check = function (data)
            (data.msg:find("%[CQ:image,file=") and searchFlag[tostring(data.qq)])
 end,
 run = function (data,sendMessage)
+    if not checkCoolDownTime(data, "animeSearch", sendMessage) then
+        return true
+    end
     if data.msg:gsub(" ","") == "搜番" then
         searchFlag[tostring(data.qq)] = true
         sendMessage(Utils.CQCode_At(data.qq).."请发送要搜索的截图")
@@ -59,7 +63,7 @@ run = function (data,sendMessage)
             searchFlag[tostring(data.qq)] = nil
         end
         sys.taskInit(function ()
-            sendMessage(Utils.CQCode_At(data.qq).."\r\n"..animeSearch(data.msg,sendMessage))
+            sendMessage(Utils.CQCode_At(data.qq).."\r\n"..animeSearch(data,sendMessage))
         end)
     end
     return true

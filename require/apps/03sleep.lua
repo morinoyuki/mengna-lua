@@ -2,14 +2,14 @@ import('System')
 
 return {--精致睡眠
 check = function (data)
-    return (data.msg == "supersleep" or data.msg == "sleep" or data.msg == "nap") or
+    return (data.msg == "extremelysleep" or data.msg == "supersleep" or data.msg == "sleep" or data.msg == "nap") or
     (data.msg:find("%[CQ:at,qq="..CQApi:GetLoginQQId().."%]") and
     (data.msg:find("%d+天") or data.msg:find("%d+小?时")) and (data.msg:find("套餐") or (data.msg:find("禁言"))))
 end,
 run = function (data,sendMessage)
     if LuaEnvName == "private" then
         sendMessage("私聊你睡尼玛呢")
-        return
+        return true
     end
     local robotInfo = Utils.GetGroupMemberInfo(data.group,CQApi:GetLoginQQId())
     local memberInfo = Utils.GetGroupMemberInfo(data.group,data.qq)
@@ -27,6 +27,8 @@ run = function (data,sendMessage)
         time = TimeSpan(8,0,0)
     elseif data.msg == "nap" then
         time = TimeSpan(0,30,0)
+    elseif data.msg == "extremelysleep" then
+        time = TimeSpan(30,0,0,0)
     else
         local day = data.msg:match("(%d+)天")
         day = tonumber(day) or 0
