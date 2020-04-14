@@ -13,9 +13,8 @@ run = function (data,sendMessage)
     time.sec = 0
     local cdTime = os.time(time) - os.time()
     setCoolDownTime(data, "like", cdTime)
-    math.randomseed(tostring(os.time()):reverse():sub(1, 6))
     --拒绝
-    if math.random() > 0.8 then
+    if randNum() > 0.8 then
         sendMessage(Utils.CQCode_At(data.qq).."\r\n"..Utils.CQCode_Image("jojo\\jujue.gif"))
         return true
     end
@@ -23,10 +22,11 @@ run = function (data,sendMessage)
     local msgs = {
         "\r\n"..Utils.CQCode_Image("jojo\\like.jpg").."\r\n吉良吉影为你点赞",
         "好了，快给[CQ:emoji,id=128116]爬",
-        "\r\n"..Utils.CQCode_Image("beidou\\百裂拳.gif").."健次郎为你点赞(死兆星在闪闪发光)"
+        "\r\n"..Utils.CQCode_Image("beidou\\百裂拳.gif").."健次郎为你点赞(死兆星在闪闪发光)",
+        "\r\n"..Utils.CQCode_Image("jojo\\觉得很赞.jpg")
     }
     CQApi:SendPraise(data.qq, 10)
-    sendMessage(Utils.CQCode_At(data.qq)..msgs[math.random(1, #msgs)])
+    sendMessage(Utils.CQCode_At(data.qq)..msgs[randNum(1, #msgs)])
     return true
 end,
 explain = function ()

@@ -10,8 +10,7 @@ run = function (data,sendMessage)
         "https://acg.yanwz.cn/api.php",
         "https://img.xjh.me/random_img.php?return=302",
     }
-    math.randomseed(tostring(os.time()):reverse():sub(1, 6))
-    local index = tonumber(data.msg:match("(%d+)")) or math.random(1,#apiUrlList)
+    local index = tonumber(data.msg:match("(%d+)")) or randNum(1,#apiUrlList)
     if index > #apiUrlList then
         sendMessage("不存在此接口")
     else
