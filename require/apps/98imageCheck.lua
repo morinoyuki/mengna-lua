@@ -1,7 +1,7 @@
 local onGroupList = {}
 local function switch(data,sendMessage)
     if data.qq ~= Utils.setting.AdminQQ then
-        sendMessage("无操作权限")
+        sendMessage("无操作权限 非公开功能会出事情请勿使用")
         return
     end
     local r18CheckSwitch = XmlApi.Get("r18CheckGroup",tostring(data.group))

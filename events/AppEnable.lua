@@ -21,7 +21,47 @@ return function ()
             "你的小垃圾服务器空间只有"..tostring(Utils.GetHardDiskFreeSpace("C")).."M空间了知道吗？快去清理")
         end
     end,600 * 1000)
-
+    --自动撤回
+    CQLog:Debug("lua插件","加载自动撤回任务")
+    sys.timerLoopStart(function ()
+        local pendingRepeal = Utils.GetVar("autoRepeal")
+        if pendingRepeal ~= "" then
+            pendingRepeal = jsonDecode(pendingRepeal)
+            if #pendingRepeal ~= 0 then
+                local i = 1
+                local flag = false
+                while i <= #pendingRepeal do
+                    --执行撤回
+                    if pendingRepeal[i].time <= os.time() then
+                        CQLog:Debug("lua插件","尝试撤回")
+                        CQApi:RemoveMessage(pendingRepeal[i].id)
+                        table.remove(pendingRepeal,i)
+                        if not flag then flag = true end
+                    --通知
+                    elseif pendingRepeal[i].notice and
+                    pendingRepeal[i].time - os.time() <= pendingRepeal[i].rmngSec then
+                        if pendingRepeal[i].group then
+                            CQApi:SendGroupMessage(pendingRepeal[i].group,
+                            pendingRepeal[i].msg)
+                        else
+                            CQApi:SendPrivateMessage(pendingRepeal[i].qq,
+                            pendingRepeal[i].msg)
+                        end
+                        pendingRepeal[i].notice = false
+                        if not flag then flag = true end
+                        i = i+1
+                    else
+                        i = i+1
+                    end
+                end
+                --刷新数据
+                if flag then
+                    local j = jsonEncode(pendingRepeal)
+                    Utils.SetVar("autoRepeal",j)
+                end
+            end
+        end
+    end,1000)
     -- --mc服务器定时重启
     -- CQLog:Debug("lua插件","加载mc服务器定时重启任务")
     -- sys.taskInit(function ()

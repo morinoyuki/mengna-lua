@@ -154,7 +154,13 @@ end
 
 --加强随机数随机性
 math.randomseed(tostring(os.time()):reverse():sub(1, 6))
-
+function randNum(m, n)
+    math.randomseed(tostring(os.time()):reverse():sub(1, 6))
+    if m and n then
+        return math.random(m,n)
+    end
+    return math.random()
+end
 --获取随机字符串
 function getRandomString(len)
     local str = "1234567890abcdefhijklmnopqrstuvwxyz"
@@ -170,7 +176,7 @@ end
 local events = {
     AppEnable = "AppEnable",--启动事件
     --FriendAdd = "",--好友已添加
-    --FriendAddRequest = "",--好友请求
+    FriendAddRequest = "FriendAddRequest",--好友请求
     --GroupAddRequest = "",--加群请求
     --GroupAddInvite = "GroupAddInvite",--机器人被邀请进群
     GroupBanSpeak = "GroupBanSpeak",--群禁言
@@ -199,6 +205,24 @@ function secDateFormat(sec)
     (date.h ~= 0 and tostring(date.h).."小时" or "")..
     (date.m ~= 0 and tostring(date.m).."分钟" or "")..
     (date.s ~= 0 and tostring(date.s).."秒" or "")
+end
+
+function setAutoRemove(data,id,time,text,rmng)
+    if id < 0 or not time then return end
+    if not rmng then rmng = 10 end
+    local pendingRepeal = Utils.GetVar("autoRepeal")
+    pendingRepeal = pendingRepeal ~= "" and jsonDecode(pendingRepeal) or {}
+    table.insert(pendingRepeal,{
+        id = id, --信息id
+        time = os.time() + time, --将消息撤回的时间
+        group = LuaEnvName ~= "private" and data.group or nil, --群号
+        qq = data.qq, --QQ号码
+        notice = text and true or false, --是否发送通知 （通知完毕后false）
+        rmngSec = rmng, --剩余多少秒通知
+        msg = text, --通知内容
+    })
+    local json = jsonEncode(pendingRepeal)
+    Utils.SetVar("autoRepeal",json)
 end
 
 --设置cd

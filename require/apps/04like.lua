@@ -20,12 +20,13 @@ run = function (data,sendMessage)
         return true
     end
     --开始点赞
+    local msgs = {
+        "\r\n"..Utils.CQCode_Image("jojo\\like.jpg").."\r\n吉良吉影为你点赞",
+        "好了，快给[CQ:emoji,id=128116]爬",
+        "\r\n"..Utils.CQCode_Image("beidou\\百裂拳.gif").."健次郎为你点赞(死兆星在闪闪发光)"
+    }
     CQApi:SendPraise(data.qq, 10)
-    if math.random() > 0.5 then
-        sendMessage(Utils.CQCode_At(data.qq).."\r\n"..Utils.CQCode_Image("jojo\\like.jpg").."\r\n吉良吉影为你点赞")
-    else
-        sendMessage(Utils.CQCode_At(data.qq).."好了，快给[CQ:emoji,id=128116]爬")
-    end
+    sendMessage(Utils.CQCode_At(data.qq)..msgs[math.random(1, #msgs)])
     return true
 end,
 explain = function ()

@@ -29,8 +29,7 @@ local function nietaRun(data, t, sendMessage)
 end
 return {
 check = function (data)
-    return LuaEnvName ~= "private" and not runing and
-    ((data.msg:find("[Jj][Oo][Jj][Oo]") and os.time() > next) or (data.msg:utf8Len() <= 5 and nieta[data.msg]))
+    return LuaEnvName ~= "private" and not runing and (data.msg:utf8Len() <= 5 and nieta[data.msg])
 end,
 run = function (data, sendMessage)
     if os.time() < next then
@@ -44,10 +43,10 @@ run = function (data, sendMessage)
     time.sec = 0
     next = os.time(time)
     local name = data.msg
-    if data.msg:find("[Jj][Oo][Jj][Oo]") then
-        sendMessage("jojo？你说jojo了吧！ wryyyyyyyy")
-        name = "阿姨压一压"
-    end
+    -- if data.msg:find("[Jj][Oo][Jj][Oo]") then
+    --     sendMessage("jojo？你说jojo了吧！ wryyyyyyyy")
+    --     name = "阿姨压一压"
+    -- end
     sys.taskInit(function ()
         nietaRun(data, nieta[name], sendMessage)
     end)

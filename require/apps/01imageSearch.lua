@@ -1,6 +1,7 @@
 --搜图
 --api key请用自己的
 local key = XmlApi.Get("settings","saucenao"):split("|")
+local keyIndex = 0
 local searchFlag = {}
 local function getUrls(urls)
     local ret = ""
@@ -10,7 +11,12 @@ local function getUrls(urls)
     return ret
 end
 local function getImageInfo(pic)
-    local html = asyncHttpGet("https://saucenao.com/search.php?"..(#key ~= 0 and "api_key="..key[math.random(1, #key)].."&" or "")..
+    if keyIndex >= #key then
+        keyIndex = 1
+    else
+        keyIndex = keyIndex+1
+    end
+    local html = asyncHttpGet("https://saucenao.com/search.php?"..(#key ~= 0 and "api_key="..key[keyIndex].."&" or "")..
         "db=999&output_type=2&numres=16&url="..pic:urlEncode(),"",30000)
     local t,r,_ = jsonDecode(html)
     if not r or not t then return false,"查找失败 可能今日搜索限额已满 明日再试或使用a2d代替" end
@@ -91,8 +97,8 @@ local function imageSearch(data,sendMessage)
         if ok then
             setCoolDownTime(data,"imageSearch",10*60)
         end
-        -- cqRepealMessage(id)
-        return r
+        CQApi:RemoveMessage(id)
+        return r,ok
     else
         return "未在消息中过滤出图片"
     end
@@ -115,8 +121,11 @@ run = function (data,sendMessage)
             searchFlag[tostring(data.qq)] = nil
         end
         sys.taskInit(function ()
-            local r = imageSearch(data,sendMessage)
-            sendMessage(Utils.CQCode_At(data.qq).."\r\n"..r)
+            local r,ok = imageSearch(data,sendMessage)
+            local id = sendMessage(Utils.CQCode_At(data.qq).."\r\n"..r)
+            if LuaEnvName ~= "private" and ok and id > 0 then
+                setAutoRemove(data,id,(2*60)-5)
+            end
         end)
     end
     return true

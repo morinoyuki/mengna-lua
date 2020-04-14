@@ -1,6 +1,6 @@
 local function saohua()
     local html = asyncHttpGet("https://chp.shadiao.app/api.php")
-    if not html or html == "" then return "舔失败了" end
+    if not html or html == "" then return "失败了" end
     return html
 end
 return {

@@ -82,15 +82,17 @@ local function getImageInfo(path)
         errorInfo = "HASH获取失败"
     end
     return "色合検索:\r\n"..colorData..
-        "特徴検索:\r\n"..(bovwData or errorInfo.."\r\n").."Engine by Ascii2d\r\nScript by 喵萌茶会组长:老森"
+        "特徴検索:\r\n"..(bovwData or errorInfo.."\r\n").."Engine by Ascii2d\r\nScript by 喵萌茶会组长:老森",true
 end
 
 local function ascii2d(message,sendMessage)
     local path = Utils.GetImageUrl(message)
     if path and path:len() ~= 0 then
-        sendMessage("少女祈祷中....")
+        local id = sendMessage("少女祈祷中....")
+        local r,ok = getImageInfo(path)
+        CQApi:RemoveMessage(id)
         -- path = Utils.GetAsciiHex(path):fromHex()
-        return getImageInfo(path)
+        return r,ok
     else
         return "未在消息中过滤出图片"
     end
@@ -110,8 +112,11 @@ run = function (data,sendMessage)
             searchFlag[tostring(data.qq)] = nil
         end
         sys.taskInit(function ()
-            local r = ascii2d(data.msg,sendMessage)
-            sendMessage(Utils.CQCode_At(data.qq).."\r\n"..r)
+            local r,ok = ascii2d(data.msg,sendMessage)
+            local id = sendMessage(Utils.CQCode_At(data.qq).."\r\n"..r)
+            if LuaEnvName ~= "private" and ok and id > 0 then
+                setAutoRemove(data,id,(2*60)-5)
+            end
         end)
     end
     
