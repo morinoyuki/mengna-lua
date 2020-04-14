@@ -191,6 +191,7 @@ local events = {
     PrivateMessage = "Message",--私聊消息---┘
     -- GroupFileUpload = "GroupFileUpload",--有人上传文件
     -- TcpServer = "ReceiveTcp",--收到tcp客户端发来的数据
+    MQTT = "MQTT",--处理MQTT连接逻辑
 }
 
 --格式化秒
