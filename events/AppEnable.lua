@@ -61,4 +61,19 @@ return function ()
             end
         end
     end,1000)
+    sys.taskInit(function ()
+        while true do
+            local time = os.date("*t",os.time()+3600*24)
+            time.hour = 0
+            time.min = 0
+            time.sec = 0
+            local delay = os.time(time) - os.time()
+            sys.wait(delay*1000)
+            CQLog:Debug("lua插件", "开始清空搜图使用次数")
+            XmlApi.Delete("useNum", "imageSearch")
+            CQLog:Debug("lua插件", "开始清空搜番使用次数")
+            XmlApi.Delete("useNum", "animeSearch")
+            sys.wait(60*1000)
+        end
+    end)
 end
