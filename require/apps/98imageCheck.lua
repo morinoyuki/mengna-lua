@@ -4,9 +4,12 @@ local function switch(data,sendMessage)
         sendMessage("无操作权限 非公开功能会出事情请勿使用")
         return
     end
-    local r18CheckSwitch = XmlApi.Get("r18CheckGroup",tostring(data.group))
     local robotInfo = Utils.GetGroupMemberInfo(data.group,CQApi:GetLoginQQId())
-
+    if robotInfo.MemberType:ToString() == "Member" then
+        sendMessage("机器人非管理")
+        return
+    end
+    local r18CheckSwitch = XmlApi.Get("r18CheckGroup",tostring(data.group))
     if r18CheckSwitch == "on" then
         local nick = robotInfo.Card ~= "" and robotInfo.Card:gsub("「巡视中」","") or ""
         r18CheckSwitch = "off"

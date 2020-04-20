@@ -641,7 +641,9 @@ local goodthings =
 "敲代码：虽然不知道写了什么，但是总觉得一定没有bug",
 "网购：好多便宜的东西",
 "早睡：今晚没有人陪你哦",
-"听音乐：和我一起学猫叫~"
+"听音乐：和我一起学猫叫~",
+"JOJO立：我也不做人了DIO！",
+"找女朋友：可能有萌妹子倒贴"
 }
 
 local badthings =
@@ -670,7 +672,9 @@ local badthings =
 "敲代码：知道写了什么，但是就是找不出bug的原因",
 "网购：会被坑",
 "早睡：会在半夜醒来，然后失眠",
-"听音乐：软件卡主，文件丢失"
+"听音乐：软件卡主，文件丢失",
+"JOJO立：闪到腰被送入医院，可怜",
+"找女朋友：按F进入坦克"
 }
 --随机数表代码来自http://www.cnblogs.com/slysky/p/5954053.html
 --产生1~~m,若有n的则m~~n的数字表
@@ -738,13 +742,26 @@ local function almanac(data)
     end
 end
 
-
+local xmlName = {
+    ["昨日运势"] = "almanacL",
+    ["今日运势"] = "almanacT",
+    ["明日运势"] = "almanacN"
+}
 return {--今日运势
 check = function (data)
     return data.msg=="今日运势" or data.msg=="明日运势" or data.msg=="昨日运势"
 end,
 run = function (data,sendMessage)
+    if not checkCoolDownTime(data, xmlName[data.msg], sendMessage) then
+        return true
+    end
     sendMessage(Utils.CQCode_At(data.qq)..almanac(data))
+    local time = os.date("*t",os.time()+3600*24)
+    time.hour = 0
+    time.min = 0
+    time.sec = 0
+    local cdTime = os.time(time) - os.time()
+    setCoolDownTime(data, xmlName[data.msg], cdTime)
     return true
 end,
 explain = function ()

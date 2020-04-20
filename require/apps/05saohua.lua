@@ -1,5 +1,5 @@
 local function saohua()
-    local html = asyncHttpGet("https://chp.shadiao.app/api.php")
+    local html = asyncHttpGet("https://chp.shadiao.app/api.php", "", 30000)
     if not html or html == "" then return "失败了" end
     return html
 end

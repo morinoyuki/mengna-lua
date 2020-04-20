@@ -14,7 +14,7 @@ end
 -- end
 --按照MD5将table存入缓存
 local function setCache(image,t)
-    if cache["num"] > 100 then cache = {} end
+    if cache["num"] and cache["num"] > 100 then cache = {} end
     local md5 = image:match("%[CQ:image,file=(.-)%..-%]")
     if not cache[md5] then
         cache[md5] = t

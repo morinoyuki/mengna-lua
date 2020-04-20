@@ -41,8 +41,8 @@ run = function (data,sendMessage)
     sys.taskInit(function ()
         local r = netEaseMusic(data.msg)
         sendMessage(r)
-        if r:find("爆炸") then
-            setCoolDownTime(data,"netEase",10*60)
+        if not r:find("爆炸") then
+            setCoolDownTime(data,"netEase",5*60)
         end
     end)
     return true

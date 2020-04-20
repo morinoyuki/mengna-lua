@@ -74,7 +74,7 @@ return function (data)
         end
         sendMessage("[CQ:emoji,id=128172]命令帮助("..tostring(page).."/"..tostring(maxPage).."页)\r\n"..
         table.concat(allApp, "\r\n").."\r\n"..
-        "[CQ:emoji,id=128483]如果喜欢我可以“投食”支持下\r\n拒绝白嫖从我做起")
+        "[CQ:emoji,id=128483]如果喜欢我可以“投食”支持")
         return
     end
 

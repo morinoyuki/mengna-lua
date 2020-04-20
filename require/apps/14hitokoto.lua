@@ -8,6 +8,11 @@ local function hitokoto(data)
     e = "Myself – 原创",
     f = "Internet – 来自网络",
     g = "Other – 其他",
+    h = "Movie - 影视",
+    i = "Poetry - 诗词",
+    j = "Netease - 网易云",
+    k = "Philosophy - 哲学",
+    l = "Doujiling - 抖机灵"
     }
     local function getText(s)
         if not s then return end

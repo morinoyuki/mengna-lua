@@ -31,8 +31,8 @@ run = function (data,sendMessage)
     sys.taskInit(function()
         local r = qqmusic(data.msg)
         sendMessage(r)
-        if r:find("爆炸") then
-            setCoolDownTime(data,"qqmusic",10*60)
+        if not r:find("爆炸") then
+            setCoolDownTime(data,"qqmusic",5*60)
         end
     end)
     return true

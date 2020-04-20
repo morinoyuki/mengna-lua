@@ -8,7 +8,7 @@ run = function (data,sendMessage)
     end
     local apiUrlList = {
         "https://acg.yanwz.cn/api.php",
-        "https://img.xjh.me/random_img.php?return=302",
+        -- "https://img.xjh.me/random_img.php?return=302",
     }
     local index = tonumber(data.msg:match("(%d+)")) or randNum(1,#apiUrlList)
     if index > #apiUrlList then

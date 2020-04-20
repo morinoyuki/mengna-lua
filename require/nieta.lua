@@ -27,13 +27,8 @@ return {
         },
         {
             type = "image",
-            file = "jojo\\2muda.gif",
-            wait = 60*50
-        },
-        {
-            type = "image",
-            file = "jojo\\2ora.gif",
-            wait = 60*50
+            file = "jojo\\世界vs白金.gif",
+            wait = 60*100
         },
         {
             type = "image",
