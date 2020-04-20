@@ -1,5 +1,4 @@
 --搜图
---api key请用自己的
 local key = XmlApi.Get("settings","saucenao"):split("|")
 local keyIndex = 0
 local searchFlag = {}
@@ -19,7 +18,7 @@ local function getImageInfo(pic)
     local html = asyncHttpGet("https://saucenao.com/search.php?"..(#key ~= 0 and "api_key="..key[keyIndex].."&" or "")..
         "db=999&output_type=2&numres=16&url="..pic:urlEncode(),"",30000)
     local t,r,_ = jsonDecode(html)
-    if not r or not t then return false,"查找失败 可能今日搜索限额已满 明日再试或使用a2d代替" end
+    if not r or not t then return false,"查找失败 可能今日搜索接口限额已满 明日再试或使用a2d代替" end
     if not t.results or #t.results==0 then return false,"未找到结果 请尝试使用a2d搜索看看" end
     local result = ""
     local last = {}
@@ -110,6 +109,12 @@ check = function (data)
     (data.msg:find("%[CQ:image,file=") and searchFlag[tostring(data.qq)])
 end,
 run = function (data,sendMessage)
+    if LuaEnvName ~= "828090839" then
+        if getUseNum(data) >= 10 then
+            sendMessage(Utils.CQCode_At(data.qq).."今日你使用次数太多达到限制")
+            return true
+        end
+    end
     if not checkCoolDownTime(data, "imageSearch", sendMessage) then
         return true
     end
@@ -123,6 +128,9 @@ run = function (data,sendMessage)
         sys.taskInit(function ()
             local r,ok = imageSearch(data,sendMessage)
             local id = sendMessage(Utils.CQCode_At(data.qq).."\r\n"..r)
+            if ok then
+                setUseNum(data)
+            end
             if LuaEnvName ~= "private" and ok and id > 0 then
                 setAutoRemove(data,id,(2*60)-5)
             end

@@ -138,7 +138,7 @@ function asyncImage(url,check)
         end
     end
     local file = "0LuaTemp"..os.time()..getId()..".luatemp"
-    local sr,fr,dr = asyncFileDownload(url,"data/image/"..file,1024 * 1024 * 20,5000)
+    local sr,fr,dr = asyncFileDownload(url,"data/image/"..file,1024 * 1024 * 20,36000)
     if sr and fr and dr then
         if adultData and adultData.isAdult < 0 then
             adultData  = imageCheck.localCheck("data/image/"..file)
@@ -154,6 +154,7 @@ end
 
 --加强随机数随机性
 math.randomseed(tostring(os.time()):reverse():sub(1, 6))
+--随机
 function randNum(m, n)
     math.randomseed(tostring(os.time()):reverse():sub(1, 6))
     if m and n then
@@ -166,7 +167,7 @@ function getRandomString(len)
     local str = "1234567890abcdefhijklmnopqrstuvwxyz"
     local ret = ""
     for i = 1, len do
-        local rchr = math.random(1, string.len(str))
+        local rchr = randNum(1, string.len(str))
         ret = ret .. string.sub(str, rchr, rchr)
     end
     return ret
@@ -207,7 +208,7 @@ function secDateFormat(sec)
     (date.m ~= 0 and tostring(date.m).."分钟" or "")..
     (date.s ~= 0 and tostring(date.s).."秒" or "")
 end
-
+--设置自动撤回
 function setAutoRemove(data,id,time,text,rmng)
     if id < 0 or not time then return end
     if not rmng then rmng = 10 end
@@ -243,6 +244,21 @@ function checkCoolDownTime(data,v,sendMessage)
     end
     return cdOver
 end
+
+--限额
+function getUseNum(data)
+    local useNums = XmlApi.Get("useNum", "imageSearch")
+    useNums = useNums ~= "" and jsonDecode(useNums) or {}
+    return useNums[tostring(data.qq)] or 0
+end
+function setUseNum(data)
+    local useNums = XmlApi.Get("useNum", "imageSearch")
+    useNums = useNums ~= "" and jsonDecode(useNums) or {}
+    useNums[tostring(data.qq)] = (useNums[tostring(data.qq)] or 0)+1
+    local j = jsonEncode(useNums)
+    XmlApi.Set("useNum", "imageSearch", j)
+end
+
 
 for i,j in pairs(events) do
     local f

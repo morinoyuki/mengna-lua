@@ -5,15 +5,15 @@ local searchFlag = {}
 local function animeSearch(data,sendMessage)
     local pCheck = Utils.GetPictureWidth(data.msg) / Utils.GetPictureHeight(data.msg)
     if pCheck <= 1.3 or pCheck >= 2.4 then
-        return "别拿表情忽悠我、请换一张完整的、没有裁剪过的动画视频截图"
+        return "别拿表情忽悠我、请换一张完整的、没有裁剪过的动画视频截图",false
     elseif pCheck ~= pCheck then --0/0 == IND
-        return "未在消息中过滤出图片"
+        return "未在消息中过滤出图片",false
     end
 
     local imagePath = Utils.GetImagePath(data.msg)--获取图片路径
 
     if not imagePath then
-        return "图片读取失败"
+        return "图片读取失败",false
     end
     sendMessage("少女祈祷中....")
     --imagePath = Utils.GetAsciiHex(imagePath):fromHex()--转码路径，以免乱码找不到文件
@@ -22,11 +22,10 @@ local function animeSearch(data,sendMessage)
     local html = asyncHttpPost("https://trace.moe/api/search?token="..key,
     "image=data:image/jpeg;base64,"..base64,15000)
     if not html or html:len() == 0 then
-        return "查找失败，网站炸了，请稍后再试。"
+        return "查找失败，网站炸了，请稍后再试。",false
     end
     local d,r,i = jsonDecode(html)
     if r then
-        setCoolDownTime(data, "animeSearch", 10*60)
         return "搜索结果：\r\n"..
         "动画名："..d.docs[1].title_native.."("..d.docs[1].title_romaji..")\r\n"..
         (d.docs[1].title_chinese and "译名："..d.docs[1].title_chinese.."\r\n" or "")..
@@ -38,9 +37,9 @@ local function animeSearch(data,sendMessage)
         "&file="..d.docs[1].filename:urlEncode()..
         "&t="..tostring(d.docs[1].at)..
         "&token="..d.docs[1].tokenthumb).."\r\n" or "")..
-        "by trace.moe"
+        "by trace.moe",true
     else
-        return "没搜到结果，请换一张完整的、没有裁剪过的动画视频截图"
+        return "没搜到结果，请换一张完整的、没有裁剪过的动画视频截图",false
     end
 end
 
@@ -52,6 +51,12 @@ check = function (data)
            (data.msg:find("%[CQ:image,file=") and searchFlag[tostring(data.qq)])
 end,
 run = function (data,sendMessage)
+    if LuaEnvName ~= "828090839" then
+        if getUseNum(data) >= 10 then
+            sendMessage(Utils.CQCode_At(data.qq).."今日你使用次数太多达到限制")
+            return true
+        end
+    end
     if not checkCoolDownTime(data, "animeSearch", sendMessage) then
         return true
     end
@@ -63,7 +68,12 @@ run = function (data,sendMessage)
             searchFlag[tostring(data.qq)] = nil
         end
         sys.taskInit(function ()
-            sendMessage(Utils.CQCode_At(data.qq).."\r\n"..animeSearch(data,sendMessage))
+            local r,ok = animeSearch(data,sendMessage)
+            sendMessage(Utils.CQCode_At(data.qq).."\r\n"..r)
+            if ok then
+                setCoolDownTime(data, "animeSearch", 10*60)
+                setUseNum(data)
+            end
         end)
     end
     return true
