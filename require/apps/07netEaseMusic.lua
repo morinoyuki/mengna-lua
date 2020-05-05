@@ -41,7 +41,7 @@ run = function (data,sendMessage)
     sys.taskInit(function ()
         local r = netEaseMusic(data.msg)
         sendMessage(r)
-        if not r:find("爆炸") then
+        if not r:find("爆炸") and r ~= "请正确输入关键词" then
             setCoolDownTime(data,"netEase",5*60)
         end
     end)
