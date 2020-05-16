@@ -246,17 +246,17 @@ function checkCoolDownTime(data,v,sendMessage)
 end
 
 --限额
-function getUseNum(data)
-    local useNums = XmlApi.Get("useNum", "imageSearch")
+function getUseNum(data, name)
+    local useNums = XmlApi.Get("useNum", name)
     useNums = useNums ~= "" and jsonDecode(useNums) or {}
     return useNums[tostring(data.qq)] or 0
 end
-function setUseNum(data)
-    local useNums = XmlApi.Get("useNum", "imageSearch")
+function setUseNum(data, name)
+    local useNums = XmlApi.Get("useNum", name)
     useNums = useNums ~= "" and jsonDecode(useNums) or {}
     useNums[tostring(data.qq)] = (useNums[tostring(data.qq)] or 0)+1
     local j = jsonEncode(useNums)
-    XmlApi.Set("useNum", "imageSearch", j)
+    XmlApi.Set("useNum", name, j)
 end
 
 

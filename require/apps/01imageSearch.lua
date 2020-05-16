@@ -110,7 +110,7 @@ check = function (data)
 end,
 run = function (data,sendMessage)
     if LuaEnvName ~= "828090839" then
-        if getUseNum(data) >= 10 then
+        if getUseNum(data, "imageSearch") >= 10 then
             sendMessage(Utils.CQCode_At(data.qq).."今日你使用次数太多达到限制")
             return true
         end
@@ -129,7 +129,7 @@ run = function (data,sendMessage)
             local r,ok = imageSearch(data,sendMessage)
             local id = sendMessage(Utils.CQCode_At(data.qq).."\r\n"..r)
             if ok then
-                setUseNum(data)
+                setUseNum(data, "imageSearch")
             end
             if LuaEnvName ~= "private" and ok and id > 0 then
                 setAutoRemove(data,id,(2*60)-5)
