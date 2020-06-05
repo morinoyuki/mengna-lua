@@ -21,6 +21,7 @@ local function animeSearch(data,sendMessage)
     local base64 = Utils.Base64File(imagePath,Utils.GetPictureHeight(data.msg) > 720 and 720 or 0) --获取base64结果
     local html = asyncHttpPost("https://trace.moe/api/search?token="..key,
     "image=data:image/jpeg;base64,"..base64,15000)
+    -- local html = asyncHttpGet("https://trace.moe/api/search", "token="..key.."&url="..Utils.GetImageUrl(data.msg):urlEncode(), 15000)
     if not html or html:len() == 0 then
         return "查找失败，网站炸了，请稍后再试。",false
     end

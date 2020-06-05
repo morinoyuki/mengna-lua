@@ -37,7 +37,7 @@ local function getAdultInfo(html)
         return ret
     end
     if j.rating_index == 3 and
-    j.predictions.adult >= 85 then
+    j.predictions.adult >= 70 then
         ret.isAdult = 2
         ret.json = j
     elseif j.rating_index == 3 then
@@ -182,7 +182,7 @@ end
 --立刻检查并禁言
 function imageCheck.checkAndBan(data,sendMessage,time)
     if not time then
-        time = 10*60 --默认5分钟
+        time = 10*60 --默认10分钟
     end
     -- local groupMember = cqGetMemberInfo(group,qq)
     

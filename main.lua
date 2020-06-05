@@ -209,22 +209,12 @@ function secDateFormat(sec)
     (date.s ~= 0 and tostring(date.s).."秒" or "")
 end
 --设置自动撤回
-function setAutoRemove(data,id,time,text,rmng)
-    if id < 0 or not time then return end
-    if not rmng then rmng = 10 end
-    local pendingRepeal = Utils.GetVar("autoRepeal")
-    pendingRepeal = pendingRepeal ~= "" and jsonDecode(pendingRepeal) or {}
-    table.insert(pendingRepeal,{
-        id = id, --信息id
-        time = os.time() + time, --将消息撤回的时间
-        group = LuaEnvName ~= "private" and data.group or nil, --群号
-        qq = data.qq, --QQ号码
-        notice = text and true or false, --是否发送通知 （通知完毕后false）
-        rmngSec = rmng, --剩余多少秒通知
-        msg = text, --通知内容
-    })
-    local json = jsonEncode(pendingRepeal)
-    Utils.SetVar("autoRepeal",json)
+function setAutoRemove(id, time)
+    if id <= 0 or not time or time <= 0 then return end
+    sys.taskInit(function ()
+        sys.wait(time*1000)
+        CQApi:RemoveMessage(id)
+    end)
 end
 
 --设置cd

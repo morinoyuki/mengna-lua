@@ -676,6 +676,12 @@ local badthings =
 "JOJO立：闪到腰被送入医院，可怜",
 "找女朋友：按F进入坦克"
 }
+--例外情况
+if LuaEnvName == "828090839" then
+    table.insert(goodthings, "炼兔：身娇体柔易推倒，兔奶美味可口")
+    table.insert(badthings, "炼兔：胸如钢板，被拍飞")
+end
+
 --随机数表代码来自http://www.cnblogs.com/slysky/p/5954053.html
 --产生1~~m,若有n的则m~~n的数字表
 function table.fillNum(m,n)

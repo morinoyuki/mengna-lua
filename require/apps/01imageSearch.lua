@@ -132,7 +132,7 @@ run = function (data,sendMessage)
                 setUseNum(data, "imageSearch")
             end
             if LuaEnvName ~= "private" and ok and id > 0 then
-                setAutoRemove(data,id,(2*60)-5)
+                setAutoRemove(id,(2*60)-5)
             end
         end)
     end
