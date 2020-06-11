@@ -153,15 +153,17 @@ function asyncImage(url,check)
 end
 
 --加强随机数随机性
-math.randomseed(tostring(os.time()):reverse():sub(1, 6))
+import('System')
+math.randomseed(tostring(DateTime.Now.Ticks):reverse():sub(1, 6))
 --随机
 function randNum(m, n)
-    math.randomseed(tostring(os.time()):reverse():sub(1, 6))
+    math.randomseed(tostring(DateTime.Now.Ticks):reverse():sub(1, 6))
     if m and n then
         return math.random(m,n)
     end
     return math.random()
 end
+
 --获取随机字符串
 function getRandomString(len)
     local str = "1234567890abcdefhijklmnopqrstuvwxyz"
